@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ptBR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estacionamento</title>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.0/dist/sweetalert2.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+        crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            color: #343a40;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+        }
+        .form-control, .form-select {
+            border-radius: 0.25rem;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        .receipt {
+            font-family: 'Courier New', Courier, monospace;
+            background: #fff;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .receipt h6 {
+            margin-bottom: 20px;
+        }
+        .receipt p {
+            margin: 5px 0;
+        }
+        .receipt hr {
+            border-top: 1px dashed #000;
+        }
+    </style>
+</head>
+
+<body class="bg-dark">
+    <div class="container">
+        <div class="text-center my-4">
+            <img src="images/estacionamento.png" alt="carro-estacionado" width="45px" height="45px">
+            <h1 style="color: whitesmoke;">Benê - Estacionamento</h1>
+        </div>
+
+        <form class="row g-3 bg-white p-4 rounded shadow-sm">
+            <div class="col-md-6">
+                <label for="inputNome" class="form-label">Nome</label>
+                <input type="text" class="form-control" id="inputNome">
+            </div>
+            <div class="col-md-6">
+                <label for="inputSobrenome" class="form-label">Sobrenome</label>
+                <input type="text" class="form-control" id="inputSobrenome">
+            </div>
+            <div class="col-md-6">
+                <label for="inputPlaca" class="form-label">Placa do veículo</label>
+                <input type="text" class="form-control" id="inputPlaca">
+            </div>
+            <div class="col-md-6">
+                <label for="inputMarca" class="form-label">Marca do veículo</label>
+                <input type="text" class="form-control" id="inputMarca" placeholder="Chevrolet, Honda, etc...">
+            </div>
+            <div class="col-md-6">
+                <label for="inputModelo" class="form-label">Modelo do veículo</label>
+                <input type="text" class="form-control" id="inputModelo" placeholder="Corsa, Kwid, etc...">
+            </div>
+            <div class="col-md-6">
+                <label for="inputTipo" class="form-label">Tipo do veículo</label>
+                <select id="inputTipo" class="form-select">
+                    <option>Moto</option>
+                    <option>Pequeno</option>
+                    <option>Médio</option>
+                    <option>Grande</option>
+                    <option>Caminhonete</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label for="inputDiaSemana" class="form-label">Dia da semana</label>
+                <select id="inputDiaSemana" class="form-select">
+                    <option>Segunda-feira</option>
+                    <option>Terça-feira</option>
+                    <option>Quarta-feira</option>
+                    <option>Quinta-feira</option>
+                    <option>Sexta-feira</option>
+                    <option>Sábado</option>
+                    <option>Domingo</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label for="inputEntrada" class="form-label">Hora da entrada</label>
+                <input type="time" class="form-control" id="inputEntrada">
+            </div>
+            <div class="col-md-6">
+                <label for="inputSaida" class="form-label">Hora da saída</label>
+                <input type="time" class="form-control" id="inputSaida">
+            </div>
+            <div class="col-12 text-center">
+                <button onclick="finalizar(event)" class="btn btn-primary mt-3">Finalizar</button>
+            </div>
+        </form>
+    </div>
+
+    <div>
+        <!-- Modal -->
+        <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="infoModalLabel">Nota Fiscal do Estacionamento</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="receipt">
+                            <h6 class="text-center">Benê - Estacionamento</h6>
+                            <hr>
+                            <p><strong>Nome:</strong> <span id="modalNome"></span></p>
+                            <p><strong>Sobrenome:</strong> <span id="modalSobrenome"></span></p>
+                            <p><strong>Placa do veículo:</strong> <span id="modalPlaca"></span></p>
+                            <p><strong>Marca do veículo:</strong> <span id="modalMarca"></span></p>
+                            <p><strong>Modelo do veículo:</strong> <span id="modalModelo"></span></p>
+                            <p><strong>Tipo do veículo:</strong> <span id="modalTipo"></span></p>
+                            <p><strong>Dia da semana:</strong> <span id="modalDiaSemana"></span></p>
+                            <p><strong>Hora da entrada:</strong> <span id="modalEntrada"></span></p>
+                            <p><strong>Hora da saída:</strong> <span id="modalSaida"></span></p>
+                            <hr>
+                            <p><strong>Valor do estacionamento:</strong> R$ <span id="modalValor"></span></p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function finalizar(event) {
+            event.preventDefault();
+
+            nome = document.getElementById('inputNome').value;
+            sobrenome = document.getElementById('inputSobrenome').value;
+            placaVeiculo = document.getElementById('inputPlaca').value;
+            marcaVeiculo = document.getElementById('inputMarca').value;
+            modeloVeiculo = document.getElementById('inputModelo').value;
+            var e = document.getElementById("inputTipo");
+            var tipoSelecionado = e.options[e.selectedIndex].text;
+            var diaSemana = document.getElementById("inputDiaSemana").value;
+            horaEntrada = document.getElementById('inputEntrada').value;
+            horaSaida = document.getElementById('inputSaida').value;
+
+            var partesEntrada = horaEntrada.split(":");
+            var entradaHora = parseInt(partesEntrada[0]);
+            var entradaMinutos = parseInt(partesEntrada[1]);
+            var totalMinutosEntrada = (entradaHora * 60) + entradaMinutos;
+
+            var partesSaida = horaSaida.split(":");
+            var saidaHora = parseInt(partesSaida[0]);
+            var saidaMinutos = parseInt(partesSaida[1]);
+            var totalMinutosSaida = (saidaHora * 60) + saidaMinutos;
+
+            var totalMinutos = totalMinutosSaida - totalMinutosEntrada;
+            var valorEstacionamento = 0;
+
+            var erroMinutos = 0;
+
+            if (totalMinutosEntrada > totalMinutosSaida) {
+                erroMinutos = 1;
+            }
+
+            if (erroMinutos == 1) {
+                Swal.fire({
+                    title: 'Erro!',
+                    text: 'O valor da entrada deve ser menor do que o da saída!',
+                    icon: 'error',
+                    confirmButtonText: 'Entendi!'
+                })
+            } else {
+                var rate = 0;
+                switch (tipoSelecionado) {
+                    case 'Moto':
+                        rate = 2;
+                        break;
+                    case 'Pequeno':
+                        rate = 4;
+                        break;
+                    case 'Médio':
+                        rate = 5;
+                        break;
+                    case 'Grande':
+                        rate = 6;
+                        break;
+                    case 'Caminhonete':
+                        rate = 7;
+                        break;
+                }
+
+                if (totalMinutos <= 60) {
+                    var horasMenos60 = Math.ceil(totalMinutos / 15);
+                    valorEstacionamento = horasMenos60 * (rate / 4);
+                    console.log(valorEstacionamento);
+                } else if (totalMinutos > 60) {
+                    var horasMais60 = Math.ceil(totalMinutos / 60);
+                    valorEstacionamento = horasMais60 * rate;
+                    console.log(valorEstacionamento);
+                }
+
+                // Set modal content
+                document.getElementById('modalNome').innerText = nome;
+                document.getElementById('modalSobrenome').innerText = sobrenome;
+                document.getElementById('modalPlaca').innerText = placaVeiculo;
+                document.getElementById('modalMarca').innerText = marcaVeiculo;
+                document.getElementById('modalModelo').innerText = modeloVeiculo;
+                document.getElementById('modalTipo').innerText = tipoSelecionado;
+                document.getElementById('modalDiaSemana').innerText = diaSemana;
+                document.getElementById('modalEntrada').innerText = horaEntrada;
+                document.getElementById('modalSaida').innerText = horaSaida;
+                document.getElementById('modalValor').innerText = valorEstacionamento.toFixed(2);
+
+                // Show modal
+                var myModal = new bootstrap.Modal(document.getElementById('infoModal'));
+                myModal.show();
+            }
+        }
+    </script>
+</body>
+
+</html>
